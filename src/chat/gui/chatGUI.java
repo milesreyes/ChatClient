@@ -67,9 +67,19 @@ public class chatGUI extends javax.swing.JFrame {
 
         txtMessage.setColumns(20);
         txtMessage.setRows(3);
+        txtMessage.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtMessageKeyPressed(evt);
+            }
+        });
         jScrollPane2.setViewportView(txtMessage);
 
         btnSend.setText("Send!");
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendActionPerformed(evt);
+            }
+        });
 
         lsConvos.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -150,6 +160,33 @@ public class chatGUI extends javax.swing.JFrame {
     private void txtPortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPortActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPortActionPerformed
+    public void sendMessage(){
+        String newmessage= txtUsername.getText() + ": " + txtMessage.getText();
+        if(txtMessages.getText().equals("")){
+            txtMessages.setText(newmessage);
+            
+        }
+        else{
+            txtMessages.setText(txtMessages.getText() + "\n" + newmessage);
+        
+        
+        }
+        
+        txtMessage.setText(""); 
+    
+    }
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        
+        sendMessage();     
+    }//GEN-LAST:event_btnSendActionPerformed
+
+    private void txtMessageKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMessageKeyPressed
+        if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_ENTER){
+         evt.consume();
+         sendMessage();
+        
+        }
+    }//GEN-LAST:event_txtMessageKeyPressed
 
     /**
      * @param args the command line arguments
