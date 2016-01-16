@@ -4,13 +4,16 @@
  * and open the template in the editor.
  */
 package chat.gui;
-
+import java.io.*;
+import java.net.*;
 /**
  *
  * @author milesreyes
  */
 public class chatGUI extends javax.swing.JFrame {
-
+    public Socket clientSocket = null;
+    public DataOutputStream outToServer = null;
+    public BufferedReader inFromServer = null;
     /**
      * Creates new form chatGUI
      */
@@ -89,6 +92,11 @@ public class chatGUI extends javax.swing.JFrame {
         jScrollPane3.setViewportView(lsConvos);
 
         btnConnect.setText("Connect!");
+        btnConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConnectActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -172,6 +180,20 @@ public class chatGUI extends javax.swing.JFrame {
         
         }
         
+        
+        
+        try{
+            outToServer.writeBytes(newmessage + "\n");
+            txtMessages.setText(txtMessages.getText() + "\n" + inFromServer.readLine());
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        
+        
+        }
+    
+        
+        
         txtMessage.setText(""); 
     
     }
@@ -187,11 +209,54 @@ public class chatGUI extends javax.swing.JFrame {
         
         }
     }//GEN-LAST:event_txtMessageKeyPressed
+    
+    private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
+        if(clientSocket == null){
+           try {
+            clientSocket = new Socket("localhost", 6789);
+            outToServer = new DataOutputStream(clientSocket.getOutputStream());   
+            inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            btnConnect.setText("Disconnect");
+            
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+            
+        
+            }
+        
+        
+        }
+        else{
+            
+            
+            try {
+                clientSocket.close();
+                btnConnect.setText("Connect!");
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+            
+        
+            }
+            
+            
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_btnConnectActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
